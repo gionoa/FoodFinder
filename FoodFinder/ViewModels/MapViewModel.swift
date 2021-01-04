@@ -12,12 +12,16 @@ import MapKit
 protocol MapViewModelDelegate: class {
     func shouldSetRegion(_ region: MKCoordinateRegion)
     func shouldAddAnnotations(_ annotations: [MKPointAnnotation])
-//    func didUpdateLocations(_ location: [CLLocation])
     func didFetchRestaurants(_ restaurants: [Restaurant])
 }
 
 class MapViewModel: NSObject {
+    let restaurantProvider: RestaurantProviding
     weak var delegate: MapViewModelDelegate?
+
+    init(with restaurantProviding: RestaurantProviding) {
+        restaurantProvider = restaurantProviding
+    }
     
     private var userLocation: CLLocation?
     
@@ -55,7 +59,7 @@ extension MapViewModel: CLLocationManagerDelegate {
             delegate?.shouldSetRegion(region)
             
    //         delegate?.didUpdateLocations(locations)
-            YelpAPI.fetchRestaurants(latitude: location.coordinate.latitude.description, longitude: location.coordinate.longitude.description) { result in
+            restaurantProvider.fetchRestaurants(latitude: location.coordinate.latitude.description, longitude: location.coordinate.longitude.description) { result in
                 
                 switch result {
                 case .success(let restaurants):

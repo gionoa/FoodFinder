@@ -8,8 +8,12 @@
 
 import Foundation
 
-enum YelpAPI {
-    static func fetchRestaurants(latitude: String,
+protocol RestaurantProviding {
+    func fetchRestaurants(latitude: String,longitude: String, completion: @escaping (Result<[Restaurant], YelpAPIError>) -> Void)
+}
+
+struct YelpAPI: RestaurantProviding {
+    func fetchRestaurants(latitude: String,
                                 longitude: String,
                                 completion: @escaping (Result<[Restaurant], YelpAPIError>) -> Void) {
         

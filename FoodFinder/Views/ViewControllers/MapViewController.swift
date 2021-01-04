@@ -25,7 +25,7 @@ class MapViewController: UIViewController {
     }()
     
     private lazy var mapViewModel: MapViewModel = {
-        let viewModel = MapViewModel()
+        let viewModel = MapViewModel(with: YelpAPI())
         viewModel.delegate = self
         return viewModel
     }()
