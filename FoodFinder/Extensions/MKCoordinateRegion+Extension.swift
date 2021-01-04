@@ -7,10 +7,8 @@ import Foundation
 import MapKit
 
 extension MKCoordinateRegion {
-    init(location: CLLocation, withRadius regionRadius: CLLocationDistance) {
-        let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude,
-                                            longitude: location.coordinate.longitude)
-
-        self.init(center: center, latitudinalMeters: regionRadius, longitudinalMeters: regionRadius)
+    init(location: CLLocation) {
+        let regionRadius: CLLocationDistance = 4500
+        self.init(center: location.coordinate, latitudinalMeters: regionRadius, longitudinalMeters: regionRadius)
     }
 }

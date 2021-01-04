@@ -14,8 +14,6 @@ protocol MapViewControllerDelegate: class {
 }
 
 class LocationManagerDelegate: NSObject, CLLocationManagerDelegate {
-    let regionRadius: CLLocationDistance = 4500
-
     let mapView: MKMapView
 
     init(mapView: MKMapView) {
@@ -24,7 +22,7 @@ class LocationManagerDelegate: NSObject, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
-            mapView.setRegion(.init(location: location, withRadius: regionRadius), animated: true)
+            mapView.setRegion(.init(location: location), animated: true)
         }
     }
 
