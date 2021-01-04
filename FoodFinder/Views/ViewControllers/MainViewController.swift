@@ -9,21 +9,20 @@
 import UIKit
 import MapKit
 
-// I tried to build project in Storyboard, knowing the preference for them, but the Child View Controllers weren't working out so I went with a programmatic approach instead.
 class MainViewController: UIViewController {
     let mapVC = MapViewController()
-    
+
     let restaurantsVC = RestaurantsViewController()
 
     override func viewDidLoad() {
         addMapVC()
         addRestaurantsVC()
     }
-    
+
     private func addMapVC() {
         mapVC.delegate = self
         mapVC.view.translatesAutoresizingMaskIntoConstraints = false
-        mapVC.view.backgroundColor = .white 
+        mapVC.view.backgroundColor = .white
         addChild(mapVC)
         view.addSubview(mapVC.view)
         NSLayoutConstraint.activate([
@@ -33,7 +32,7 @@ class MainViewController: UIViewController {
             mapVC.view.bottomAnchor.constraint(equalTo: view.topAnchor, constant: 323)
         ])
     }
-    
+
     private func addRestaurantsVC() {
         restaurantsVC.view.translatesAutoresizingMaskIntoConstraints = false
         addChild(restaurantsVC)
@@ -50,7 +49,7 @@ class MainViewController: UIViewController {
 extension MainViewController: MapViewControllerDelegate {
     func didFetchRestaurants(_ restaurants: [Restaurant]) {
         restaurantsVC.restaurantsViewModel.setRestaurants(restaurants)
-        
+
         // given more time, I'd refactor this
         DispatchQueue.main.async { self.restaurantsVC.tableView.reloadSections(IndexSet([0]), with: .automatic) }
     }

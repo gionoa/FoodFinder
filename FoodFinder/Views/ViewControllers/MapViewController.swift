@@ -15,7 +15,7 @@ protocol MapViewControllerDelegate: class {
 
 class MapViewController: UIViewController {
     weak var delegate: MapViewControllerDelegate?
-    
+
     private lazy var mapView: MKMapView = {
         let view = MKMapView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -23,18 +23,18 @@ class MapViewController: UIViewController {
         view.showsUserLocation = true
         return view
     }()
-    
+
     private lazy var mapViewModel: MapViewModel = {
         let viewModel = MapViewModel()
         viewModel.delegate = self
         return viewModel
     }()
-     
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         mapViewModel.requestUserLocation()
-        
+
         view.addSubview(mapView)
         NSLayoutConstraint.activate([
             mapView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -49,7 +49,7 @@ extension MapViewController: MapViewModelDelegate {
     func didFetchRestaurants(_ restaurants: [Restaurant]) {
         delegate?.didFetchRestaurants(restaurants)
     }
-    
+
     func shouldSetRegion(_ region: MKCoordinateRegion) {
         mapView.setRegion(region, animated: true)
     }
