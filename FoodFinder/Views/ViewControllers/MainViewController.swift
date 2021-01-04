@@ -11,7 +11,7 @@ import MapKit
 
 // I tried to build project in Storyboard, knowing the preference for them, but the Child View Controllers weren't working out so I went with a programmatic approach instead.
 class MainViewController: UIViewController {
-    let mapVC = MapViewController()
+    let mapVC = MapViewController(with: YelpAPI())
     
     let restaurantsVC = RestaurantsViewController()
 
@@ -23,7 +23,7 @@ class MainViewController: UIViewController {
     private func addMapVC() {
         mapVC.delegate = self
         mapVC.view.translatesAutoresizingMaskIntoConstraints = false
-        mapVC.view.backgroundColor = .white 
+        mapVC.view.backgroundColor = .white
         addChild(mapVC)
         view.addSubview(mapVC.view)
         NSLayoutConstraint.activate([
