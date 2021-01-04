@@ -38,7 +38,7 @@ struct YelpAPI: RestaurantProviding {
                            latitude: String? = nil,
                            longitude: String? = nil,
                            businessID: String? = nil) -> URLRequest {
-        
+
         var components = URLComponents()
         components.scheme = YelpEndpoint.scheme
         components.host = YelpEndpoint.host
@@ -52,7 +52,7 @@ struct YelpAPI: RestaurantProviding {
         }
         
         if let businessID = businessID {
-            components.path = components.path + businessID
+            components.path += businessID
         }
         
         guard let validURL = components.url else { fatalError("Could not construct URL.") }

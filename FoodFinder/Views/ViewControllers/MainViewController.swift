@@ -12,7 +12,7 @@ import MapKit
 // I tried to build project in Storyboard, knowing the preference for them, but the Child View Controllers weren't working out so I went with a programmatic approach instead.
 class MainViewController: UIViewController {
     let mapVC = MapViewController(with: YelpAPI())
-    
+
     let restaurantsVC = RestaurantsViewController()
 
     override func viewDidLoad() {

@@ -8,26 +8,29 @@
 
 import Foundation
 
-struct Restaurant: Codable {
+// MARK: - Hour
+struct RestaurantInfo: Codable {
     let id: String
     let name: String
     let isClosed: Bool
-    let rating: Double
-    let coordinates: Coordinates
-    let location: Location
-    let phone: String
+    let phone: String?
     let displayPhone: String
-    let distance: Double
+    let rating: Int
+    let location: Location
+    let coordinates: Coordinates
+    let photos: [String]
+    let hours: [Hour]
 
     enum CodingKeys: String, CodingKey {
         case id
         case name
         case isClosed = "is_closed"
-        case rating
-        case coordinates
-        case location
         case phone
         case displayPhone = "display_phone"
-        case distance
+        case rating
+        case location
+        case coordinates
+        case photos
+        case hours
     }
 }

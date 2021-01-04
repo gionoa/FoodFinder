@@ -10,11 +10,11 @@ import Foundation
 
 class RestaurantsViewModel {
     private var restaurants = [Restaurant]()
-    
+
     var restaurantCount: Int { restaurants.count }
 
     func setRestaurants(_ restaurants: [Restaurant]) { self.restaurants = restaurants }
-    
+
     func restaurant(at index: Int) -> Restaurant { restaurants[index] }
-    
+
 }
