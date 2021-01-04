@@ -22,21 +22,9 @@ class LocationManagerDelegate: NSObject, CLLocationManagerDelegate {
         self.mapView = mapView
     }
 
-    private func createRegion(for location: CLLocation) -> MKCoordinateRegion {
-        let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude,
-                                            longitude: location.coordinate.longitude)
-
-        let region = MKCoordinateRegion(center: center,
-                                        latitudinalMeters: regionRadius,
-                                        longitudinalMeters: regionRadius)
-
-        return region
-    }
-
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.first { // current user location
-            let region = createRegion(for: location)
-            mapView.setRegion(region, animated: true)
+        if let location = locations.first {
+            mapView.setRegion(.init(location: location, withRadius: regionRadius), animated: true)
         }
     }
 
