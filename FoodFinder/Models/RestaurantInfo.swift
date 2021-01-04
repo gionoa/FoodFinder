@@ -10,6 +10,7 @@ import Foundation
 
 // MARK: - Hour
 struct RestaurantInfo: Codable {
+    // swiftlint:disable identifier_name
     let id: String
     let name: String
     let isClosed: Bool
@@ -22,6 +23,7 @@ struct RestaurantInfo: Codable {
     let hours: [Hour]
 
     enum CodingKeys: String, CodingKey {
+        // swiftlint:disable identifier_name
         case id
         case name
         case isClosed = "is_closed"

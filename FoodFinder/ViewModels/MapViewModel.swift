@@ -21,10 +21,9 @@ class MapViewModel: NSObject {
     }
     
     private var userLocation: CLLocation?
-    private let manager:  CLLocationManager
+    private let manager: CLLocationManager
     
     func requestUserLocation() {
         manager.requestLocation()
     }
 }
-

@@ -9,15 +9,15 @@
 import Foundation
 
 protocol RestaurantProviding {
-    func fetchRestaurants(latitude: String,longitude: String, completion: @escaping (Result<[Restaurant], YelpAPIError>) -> Void)
+    func fetchRestaurants(latitude: String, longitude: String, completion: @escaping (Result<[Restaurant], YelpAPIError>) -> Void)
 }
 
 struct YelpAPI: RestaurantProviding {
     func fetchRestaurants(latitude: String,
-                                longitude: String,
-                                completion: @escaping (Result<[Restaurant], YelpAPIError>) -> Void) {
+                          longitude: String,
+                          completion: @escaping (Result<[Restaurant], YelpAPIError>) -> Void) {
         
-        URLSession.shared.dataTask(with: YelpAPI.urlRequest(withPath: .businessesSearch, latitude: latitude, longitude: longitude)) { data, response, error in
+        URLSession.shared.dataTask(with: YelpAPI.urlRequest(withPath: .businessesSearch, latitude: latitude, longitude: longitude)) { data, _, error in
             guard let data = data else {
                 completion(.failure(.dataObjectError(error.debugDescription)))
                 return
@@ -26,7 +26,7 @@ struct YelpAPI: RestaurantProviding {
             do {
                 let decodedData = try JSONDecoder().decode(YelpData.self, from: data)
                 completion(.success(decodedData.businesses))
-            } catch (let error) {
+            } catch {
                 print(error)
                 completion(.failure(.decodingError(error.localizedDescription)))
             }

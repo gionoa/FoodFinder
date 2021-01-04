@@ -64,7 +64,7 @@ class MapViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private lazy var manager:  CLLocationManager = {
+    private lazy var manager: CLLocationManager = {
         let manager = CLLocationManager()
         manager.delegate = locationManagerDelegate
         return manager
