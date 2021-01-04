@@ -9,6 +9,7 @@
 import Foundation
 
 struct Restaurant: Codable {
+    // swiftlint:disable identifier_name
     let id: String
     let name: String
     let isClosed: Bool
@@ -20,6 +21,7 @@ struct Restaurant: Codable {
     let distance: Double
 
     enum CodingKeys: String, CodingKey {
+        // swiftlint:disable identifier_name
         case id
         case name
         case isClosed = "is_closed"

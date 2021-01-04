@@ -13,28 +13,66 @@ protocol MapViewControllerDelegate: class {
     func didFetchRestaurants(_ restaurants: [Restaurant])
 }
 
+class LocationManagerDelegate: NSObject, CLLocationManagerDelegate {
+    let mapView: MKMapView
+
+    init(mapView: MKMapView) {
+        self.mapView = mapView
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            mapView.setRegion(.init(location: location), animated: true)
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Location Manager failed with error: \(error)")
+    }
+}
+
 class MapViewController: UIViewController {
     weak var delegate: MapViewControllerDelegate?
+    let restaurantProvider: RestaurantProviding
 
-    private lazy var mapView: MKMapView = {
-        let view = MKMapView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.delegate = self
-        view.showsUserLocation = true
-        return view
+    private let mapView: MKMapView
+    private var locationManagerDelegate: LocationManagerDelegate
+
+    init(with restaurantProviding: RestaurantProviding) {
+        let mapView = MKMapView()
+        restaurantProvider = restaurantProviding
+        locationManagerDelegate = LocationManagerDelegate(mapView: mapView)
+        self.mapView = mapView
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private lazy var manager: CLLocationManager = {
+        let manager = CLLocationManager()
+        manager.delegate = locationManagerDelegate
+        return manager
     }()
 
     private lazy var mapViewModel: MapViewModel = {
-        let viewModel = MapViewModel()
+        let viewModel = MapViewModel(with: YelpAPI(), locationManager: manager)
         viewModel.delegate = self
         return viewModel
     }()
-
+     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        mapViewModel.requestUserLocation()
+        mapView.translatesAutoresizingMaskIntoConstraints = false
+        mapView.delegate = self
+        mapView.showsUserLocation = true
 
+        mapViewModel.requestUserLocation()
+        manager.requestWhenInUseAuthorization()
+        manager.requestLocation()
+        
         view.addSubview(mapView)
         NSLayoutConstraint.activate([
             mapView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -50,12 +88,32 @@ extension MapViewController: MapViewModelDelegate {
         delegate?.didFetchRestaurants(restaurants)
     }
 
-    func shouldSetRegion(_ region: MKCoordinateRegion) {
-        mapView.setRegion(region, animated: true)
-    }
-    func shouldAddAnnotations(_ annotations: [MKPointAnnotation]) {
-        mapView.addAnnotations(annotations)
-    }
 }
 
-extension MapViewController: MKMapViewDelegate { }
+extension MapViewController: MKMapViewDelegate {
+    func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
+        let coordinate = mapView.userLocation.coordinate
+        restaurantProvider.fetchRestaurants(latitude: coordinate.latitude.description, longitude: coordinate.longitude.description) { result in
+
+            switch result {
+            case .success(let restaurants):
+                self.delegate?.didFetchRestaurants(restaurants)
+
+                let annotations = restaurants.map { restaurant -> MKPointAnnotation in
+                    let coordinate = CLLocationCoordinate2D(latitude: restaurant.coordinates.latitude,
+                                                            longitude: restaurant.coordinates.longitude)
+
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = coordinate
+                    annotation.title = restaurant.name
+
+                    return annotation
+                }
+
+                mapView.addAnnotations(annotations)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+}
